@@ -36,7 +36,7 @@ std::map<unsigned char, std::string> createTable(Node *huffmanHead) {
 }
 
 // Given a map where the key is a byte value (unsigned char) and the hash value is
-// how often the value occurs, this function turns the map into a function of nodes
+// how often the value occurs, this function turns the map into a vector of nodes
 // This is done by iterating over the map and creating a new node with the values for each entry
 std::vector<Node *> getOccurrenceNodes(std::map<unsigned char, int> &occurrences) {
   std::vector<Node *> nodes;
