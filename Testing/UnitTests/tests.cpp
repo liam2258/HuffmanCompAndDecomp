@@ -82,7 +82,8 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
 
 
 
-
+// Helper function for getNodeList, this part of the code traverses the
+// tree in post order form, adding each node with no children to the list as it goes
 void nodeListHelper(Node *given, std::vector<unsigned char> &list) {
     if (given) {
         list.push_back(given->value);
@@ -99,6 +100,8 @@ std::vector<unsigned char> getNodeList(Node *given) {
     return list;
 }
 
+// Helper function for getHuffmanValues, this part of the code traverses the
+// tree in post order form, adding each node with no children to the list as it goes
 void huffmanValuesHelper(Node *given, std::vector<unsigned char> &values) {
     if (given) {
         if (!given->left && !given->right) {
@@ -111,6 +114,8 @@ void huffmanValuesHelper(Node *given, std::vector<unsigned char> &values) {
     huffmanValuesHelper(given->right, values);
 }
 
+// A function to help test the validity of huffman trees, function returns a vector of all the values in the huffman tree
+// In post order form
 std::vector<unsigned char> getHuffmanValues(Node *given) {
     std::vector<unsigned char> values;
     huffmanValuesHelper(given, values);
@@ -118,7 +123,8 @@ std::vector<unsigned char> getHuffmanValues(Node *given) {
 }
 
 
-
+// Helper function for getHuffmanFrequencies, this part of the code actually traverse the
+// tree in post order form, adding each node to the list as it goes
 void huffmanFrequenciesHelper(Node *given, std::vector<int> &frequencies) {
     if (given) {
         frequencies.push_back(given->frequency);
@@ -129,6 +135,8 @@ void huffmanFrequenciesHelper(Node *given, std::vector<int> &frequencies) {
     huffmanFrequenciesHelper(given->right, frequencies);
 }
 
+// A function to help test the validity of huffman trees, function returns a vector of all the frequencies in the huffman tree
+// In post order form
 std::vector<int> getHuffmanFrequencies(Node *given) {
     std::vector<int> frequencies;
     huffmanFrequenciesHelper(given, frequencies);
@@ -136,7 +144,7 @@ std::vector<int> getHuffmanFrequencies(Node *given) {
 }
 
 
-
+// Testing functions in TreeUtils.h
 TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
     SECTION("getTreePacket() Tests:") {
 
