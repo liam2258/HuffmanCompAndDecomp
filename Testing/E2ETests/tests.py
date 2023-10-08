@@ -32,21 +32,16 @@ def test_file_creation():
     path = os.path.dirname(os.path.abspath(__file__))
     command = f"{path}/main test.txt"
     compile_process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    compile_process.wait()
     _, compile_error1 = compile_process.communicate()
 
     command = f"{path}/main alice_in_wonderland.txt"
     compile_process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    compile_process.wait()
     _, compile_error2 = compile_process.communicate()
 
     command = f"{path}/main kjv.txt"
     compile_process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    compile_process.wait()
     _, compile_error3 = compile_process.communicate()
 
-    # Wait for the compilation to finish
-    compile_process.wait()
     if platform.system() == "Linux":
         assert os.path.exists("test.hcmp"), f'Expected file to be created but it was not {compile_error1}'
         assert os.path.exists("alice_in_wonderland.hcmp"), f'Expected file to be created but it was not {compile_error2}'
