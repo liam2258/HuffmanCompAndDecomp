@@ -1,66 +1,7 @@
 #include "BitUtils.h"
 #include "TreeUtils.h"
+#include "MapUtils.h"
 #include <cstring>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <vector>
-#include <stdexcept>
-
-// A helper function for create table, it creates a map that keeps track of the binary path
-// for each value in the huffman tree. It does this by recursively traversing the tree in
-// preorder form while passsing a copy of the path string in every function call,
-// appending it with 0 if it traverses left, and 1 if it traverses right, then commiting
-// that path to the map when finding a node with no child nodes
-void findTreePath(Node *head, std::string path,
-                  std::map<unsigned char, std::string> &table) {
-  if (head == nullptr) {
-    return;
-  }
-
-  if (head->left == nullptr && head->right == nullptr) {
-    table[head->value] = path;
-    return;
-  }
-  findTreePath(head->left, path + '0', table);
-  findTreePath(head->right, path + '1', table);
-}
-
-// Given the head of a huffman tree the function returns a look up table as a map,
-// where the key is a node value and the hash value is the binary path to reach said node
-// in string form. This is accomplished by leverageing the helper function findTreePath
-std::map<unsigned char, std::string> createTable(Node *huffmanHead) {
-  std::map<unsigned char, std::string> table;
-  findTreePath(huffmanHead, "", table);
-  return table;
-}
-
-// Given a map where the key is a byte value (unsigned char) and the hash value is
-// how often the value occurs, this function turns the map into a vector of nodes
-// This is done by iterating over the map and creating a new node with the values for each entry
-std::vector<Node *> getOccurrenceNodes(std::map<unsigned char, int> &occurrences) {
-  std::vector<Node *> nodes;
-
-  for (auto &touple : occurrences) {
-    nodes.push_back(new Node(touple.first, touple.second));
-  }
-
-  return nodes;
-}
-
-// Given a file, the function creates a map where the key is a character in the file and the
-// hash value is the number of times it occurs. This is done by iterating over the file,
-// converting each char to an unsigned char, and then incrementing it in the occurences map
-std::map<unsigned char, int> getOccurrences(std::ifstream &inputFile) {
-  std::map<unsigned char, int> occurrences;
-  unsigned char byte;
-
-  while (inputFile.read(reinterpret_cast<char *>(&byte), sizeof(byte))) {
-    occurrences[byte]++;
-  }
-
-  return occurrences;
-}
 
 // This function reads the given file 1 byte at a time, converting that byte into bits, and then those bits
 // into a string of 1s and 0s. The function then checks if we've reached the end of the file, removing the
@@ -107,7 +48,7 @@ void decompressHelper(std::ofstream& outputFile, std::ifstream& inputFile, Node*
 }
 
 // Given the head of a huffman tree, an output file to write to, a input file to read from, and a remainder for how many
-// bits to discard at the end of the file, this fucntion decompress the file back to it's original state prior to compression.
+// bits to discard at the end of the file, this function decompresses the file back to it's original state prior to compression.
 // This is done by utilizing the decompressHelper  function
 void decompress(Node* head, std::ofstream& outputFile, std::ifstream& inputFile, int remainder) {
   if (head == nullptr) {
@@ -173,31 +114,6 @@ void decompressData(std::string file) {
   delete huffmanHead;
 
   std::cout << "Data successfully decompressed." << std::endl;
-}
-
-// Function uses the occurences map and look-up table to find the exact length in bits the compressed data
-// will be, it then mods it by 8 and subtracts that result from 8 to find the amount of bits that need to
-// be padded on the final byte
-int getPaddingAmount(std::map<unsigned char, int> intMap, std::map<unsigned char, std::string> stringMap) {
-  int sum = 0;
-
-  std::map<unsigned char, int>::iterator it1 = intMap.begin();
-  std::map<unsigned char, std::string>::iterator it2 = stringMap.begin();
-
-  for (; it1 != intMap.end(); ++it1, ++it2) {
-      int intValue = it1->second;
-      std::string stringValue = it2->second;
-      int result = intValue * stringValue.size();
-      sum += result;
-  }
-
-  int remainder = 8 - (sum % 8);
-
-  if (remainder == 8) {
-    return 0;
-  }
-
-  return remainder;
 }
 
 // This function is used for the compression feature of the program, it opens and reads the
