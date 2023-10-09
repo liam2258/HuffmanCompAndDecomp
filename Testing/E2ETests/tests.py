@@ -3,7 +3,7 @@ import os
 import pytest
 import platform
 
-# Function to compile the program
+# Function to test file compilation
 def test_compilation():
     
     # Get the directory of the current script
@@ -30,6 +30,7 @@ def test_compilation():
     elif platform.system() == "Windows":
         assert os.path.exists(output_executable_path + ".exe"), f'Expected main.exe to complile but it does not exist {compile_error}'
 
+# Test to make sure file compression is working
 def test_file_compression():
 
     # Get absolute path
@@ -56,3 +57,45 @@ def test_file_compression():
     # Check that compressed files are smaller than originals
     assert os.path.getsize(path + "/alice_in_wonderland.hcmp") < os.path.getsize(path + "/alice_in_wonderland.txt")
     assert os.path.getsize(path + "/kjv.hcmp") < os.path.getsize(path + "/kjv.txt")
+
+def test_file_decompression():
+    # Get absolute path
+    path = os.path.dirname(os.path.abspath(__file__))
+
+    # Create commands and run commands, collect results
+    command = f"{path}/main alice_in_wonderland.hcmp"
+    decompression_process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    _, decompression_error1 = decompression_process.communicate()
+
+    command = f"{path}/main kjv.hcmp"
+    decompression_process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    _, decompression_error2 = decompression_process.communicate()
+
+    # Confirm files are created
+    assert os.path.exists(path + "/alice_in_wonderland(unzp).txt"), f'Expected file to be created but it was not {decompression_error1}'
+    assert os.path.exists(path + "/alice_in_wonderland(unzp).txt"), f'Expected file to be created but it was not {decompression_error2}'
+
+    # Confirm unzipped file sizes match
+    assert os.path.getsize(path + "/alice_in_wonderland(unzp).txt") == os.path.getsize(path + "/alice_in_wonderland.txt"), f'Expected file contents to match but it does not'
+    assert os.path.getsize(path + "/kjv(unzp).txt") == os.path.getsize(path + "/kjv.txt"), f'Expected file contents to match but it does not'
+
+def test_clean_up():
+    # Get absolute path
+    path = os.path.dirname(os.path.abspath(__file__))
+
+    if platform.system() == "Linux":
+        os.remove(path + "/main")
+        assert not os.path.isfile(path + "/main")
+    elif platform.system() == "Windows":
+        os.remove(path + "/main.exe")
+        assert not os.path.isfile(path + "/main.exe")
+
+    os.remove(path + "/alice_in_wonderland.hcmp")
+    os.remove(path + "/kjv.hcmp")
+    os.remove(path + "/alice_in_wonderland(unzp).txt")
+    os.remove(path + "/kjv(unzp).txt")
+
+    assert not os.path.isfile(path + "/alice_in_wonderland.hcmp")
+    assert not os.path.isfile(path + "/kjv.hcmp")
+    assert not os.path.isfile(path + "/alice_in_wonderland(unzp).txt")
+    assert not os.path.isfile(path + "/kjv(unzp).txt")
