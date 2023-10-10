@@ -83,7 +83,7 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
 
 
 // Helper function for getNodeList, this part of the code traverses the
-// tree in post order form, adding each node with no children to the list as it goes
+// tree in post order form, adding each node to the list as it goes
 void nodeListHelper(Node *given, std::vector<unsigned char> &list) {
     if (given) {
         list.push_back(given->value);
@@ -94,6 +94,8 @@ void nodeListHelper(Node *given, std::vector<unsigned char> &list) {
     nodeListHelper(given->right, list);
 }
 
+// Function to traverse a tree of nodes, gets every node value in post order form
+// and returns them as a vector
 std::vector<unsigned char> getNodeList(Node *given) {
     std::vector<unsigned char> list;
     nodeListHelper(given, list);

@@ -14,12 +14,13 @@ def test_compilation():
     bitutils_cpp_path = os.path.join(script_directory, "../../BitUtils.cpp")
     treeutils_cpp_path = os.path.join(script_directory, "../../TreeUtils.cpp")
     maputils_cpp_path = os.path.join(script_directory, "../../MapUtils.cpp")
+    computils_cpp_path = os.path.join(script_directory, "../../CompUtils.cpp")
 
     # Specify the output path for the compiled executable in the script directory
     output_executable_path = os.path.join(script_directory, "main")
 
     # Create the compile command and run it
-    compile_command = f"g++ {main_cpp_path} {bitutils_cpp_path} {treeutils_cpp_path} {maputils_cpp_path} -o {output_executable_path}"
+    compile_command = f"g++ {main_cpp_path} {bitutils_cpp_path} {treeutils_cpp_path} {maputils_cpp_path} {computils_cpp_path} -o {output_executable_path}"
     compile_process = subprocess.Popen(compile_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Check results of compilation
@@ -32,7 +33,7 @@ def test_compilation():
     elif platform.system() == "Windows":
         assert os.path.exists(output_executable_path + ".exe"), f'Expected main.exe to complile but it does not exist {compile_error}'
 
-# Test to make sure file compression is working
+# Function to test file compression
 def test_file_compression():
 
     # Get absolute path
@@ -60,6 +61,7 @@ def test_file_compression():
     assert os.path.getsize(path + "/alice_in_wonderland.hcmp") < os.path.getsize(path + "/alice_in_wonderland.txt")
     assert os.path.getsize(path + "/kjv.hcmp") < os.path.getsize(path + "/kjv.txt")
 
+# Function to test file decompression
 def test_file_decompression():
     # Get absolute path
     path = os.path.dirname(os.path.abspath(__file__))
@@ -81,23 +83,27 @@ def test_file_decompression():
     assert os.path.getsize(path + "/alice_in_wonderland(unzp).txt") == os.path.getsize(path + "/alice_in_wonderland.txt"), f'Expected file contents to match but it does not'
     assert os.path.getsize(path + "/kjv(unzp).txt") == os.path.getsize(path + "/kjv.txt"), f'Expected file contents to match but it does not'
 
+# Function to remove files produced by testing
 def test_clean_up():
     # Get absolute path
     path = os.path.dirname(os.path.abspath(__file__))
 
+    # Modify how executable is removed based on system
     if platform.system() == "Linux":
         os.remove(path + "/main")
-        assert not os.path.isfile(path + "/main")
+        assert not os.path.isfile(path + "/main"), f'Expected file not to exist but it does'
     elif platform.system() == "Windows":
         os.remove(path + "/main.exe")
-        assert not os.path.isfile(path + "/main.exe")
+        assert not os.path.isfile(path + "/main.exe"), f'Expected file not to exist but it does'
 
+    # Remove created files
     os.remove(path + "/alice_in_wonderland.hcmp")
     os.remove(path + "/kjv.hcmp")
     os.remove(path + "/alice_in_wonderland(unzp).txt")
     os.remove(path + "/kjv(unzp).txt")
 
-    assert not os.path.isfile(path + "/alice_in_wonderland.hcmp")
-    assert not os.path.isfile(path + "/kjv.hcmp")
-    assert not os.path.isfile(path + "/alice_in_wonderland(unzp).txt")
-    assert not os.path.isfile(path + "/kjv(unzp).txt")
+    # Verify files were removed
+    assert not os.path.isfile(path + "/alice_in_wonderland.hcmp"), f'Expected file not to exist but it does'
+    assert not os.path.isfile(path + "/kjv.hcmp"), f'Expected file not to exist but it does'
+    assert not os.path.isfile(path + "/alice_in_wonderland(unzp).txt"), f'Expected file not to exist but it does'
+    assert not os.path.isfile(path + "/kjv(unzp).txt"), f'Expected file not to exist but it does'
