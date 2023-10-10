@@ -9,25 +9,12 @@ public:
   Node *left = nullptr;
   Node *right = nullptr;
 
-  Node() {}
+  Node();
 
-  Node(char val, int freq) {
-    value = val;
-    frequency = freq;
-  }
+  Node(char val, int freq);
 
   // Deconstructor frees all child nodes upon descruction of parent node
-  ~Node() {
-    if (left != nullptr) {
-      delete left;
-      left = nullptr;
-    }
-
-    if (right != nullptr) {
-      delete right;
-      right = nullptr;
-    }
-  }
+  ~Node();
 };
 
 #endif // NODE_H

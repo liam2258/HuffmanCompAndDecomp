@@ -10,17 +10,18 @@ def test_compilation():
     script_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Construct the absolute paths to the source files
-    main_cpp_path = os.path.join(script_directory, "../../main.cpp")
-    bitutils_cpp_path = os.path.join(script_directory, "../../BitUtils.cpp")
-    treeutils_cpp_path = os.path.join(script_directory, "../../TreeUtils.cpp")
-    maputils_cpp_path = os.path.join(script_directory, "../../MapUtils.cpp")
-    computils_cpp_path = os.path.join(script_directory, "../../CompUtils.cpp")
+    main_cpp_path = os.path.join(script_directory, "../../src/main.cpp")
+    bitutils_cpp_path = os.path.join(script_directory, "../../src/BitUtils.cpp")
+    treeutils_cpp_path = os.path.join(script_directory, "../../src/TreeUtils.cpp")
+    maputils_cpp_path = os.path.join(script_directory, "../../src/MapUtils.cpp")
+    computils_cpp_path = os.path.join(script_directory, "../../src/CompUtils.cpp")
+    node_cpp_path = os.path.join(script_directory, "../../src/Node.cpp")
 
     # Specify the output path for the compiled executable in the script directory
     output_executable_path = os.path.join(script_directory, "main")
 
     # Create the compile command and run it
-    compile_command = f"g++ {main_cpp_path} {bitutils_cpp_path} {treeutils_cpp_path} {maputils_cpp_path} {computils_cpp_path} -o {output_executable_path}"
+    compile_command = f"g++ {node_cpp_path} {main_cpp_path} {bitutils_cpp_path} {treeutils_cpp_path} {maputils_cpp_path} {computils_cpp_path} -o {output_executable_path}"
     compile_process = subprocess.Popen(compile_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Check results of compilation
