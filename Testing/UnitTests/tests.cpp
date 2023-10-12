@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
-#include "../../BitUtils.h"
-#include "../../TreeUtils.h"
+#include "../../src/BitUtils.h"
+#include "../../src/TreeUtils.h"
 
 
 
