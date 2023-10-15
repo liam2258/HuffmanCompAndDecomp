@@ -82,11 +82,11 @@ Packets that head each hcmp file are constructed in this format:
 | Huffman Tree Size | 4 bytes      |
 | Huffman Tree      | Varying size |
 
-Remainder: How many useless bits are added to the end of the file to make a complete byte
-Extension Size: How many characters the original files extension is
-Extension: The file extension characters
-Huffman Tree Size: How many bytes the huffman tree occupies
-Huffman Tree: The Huffman Tree Data
+Remainder: How many useless bits are added to the end of the file to make a complete byte  
+Extension Size: How many characters the original files extension is  
+Extension: The file extension characters  
+Huffman Tree Size: How many bytes the huffman tree occupies  
+Huffman Tree: The Huffman Tree Data  
 
 ## Compression Examples
 
