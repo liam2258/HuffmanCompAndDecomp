@@ -12,7 +12,13 @@ A file compressor and decompressor written in C++ that utilizes Huffman coding. 
 
 ## Deployment
 
-This project requires a C++ compiler and can be compiled to an executable with the following bash command from the src directory:
+This project includes a Makefile and can be compiled with the following command from the root directory:
+
+```bash
+  make
+```
+
+Alternatively it can be compiled manually with the following bash comand from the src directory:
 
 ```bash
   g++ *.cpp -o main
@@ -61,7 +67,7 @@ These tests can similarly be expanded for more detail:
 The compilation test is currently configured to use the GNU C++ compiler but this can be skipped. Please note that a compiled executable named "main" must be in the directory for other tests to pass:
 
 ```bash
-  pytest -k "not test_compilation"
+  pytest tests.py -k "not test_compilation"
 ```
 
 ## Methods
@@ -82,11 +88,11 @@ Packets that head each hcmp file are constructed in this format:
 | Huffman Tree Size | 4 bytes      |
 | Huffman Tree      | Varying size |
 
-Remainder: How many useless bits are added to the end of the file to make a complete byte  
-Extension Size: How many characters the original files extension is  
-Extension: The file extension characters  
-Huffman Tree Size: How many bytes the Huffman tree occupies  
-Huffman Tree: The Huffman Tree Data  
+Remainder: How many useless bits are added to the end of the file to make a complete byte
+Extension Size: How many characters the original files extension is
+Extension: The file extension characters
+Huffman Tree Size: How many bytes the Huffman tree occupies
+Huffman Tree: The Huffman Tree Data
 
 ## Compression Examples
 
