@@ -56,8 +56,8 @@ void decompress(Node* head, std::ofstream& outputFile, std::ifstream& inputFile,
 }
 
 // This function is used for the decompression feature of the program, opening and reading a
-// provided file, retrieiving the stored poacket information, and then decompressing the data
-// itself, the exact steps are detialed in the function
+// provided file, retrieiving the stored packet information, and then decompressing the data
+// itself, the exact steps are detailed in the function
 void decompressData(std::string file) {
   std::ifstream inputFile(file, std::ios::binary);
   if (!inputFile) {
@@ -194,7 +194,7 @@ void compressData(std::string file) {
 
 
       // If the buffer has at least 8 characters, enough to form a single byte,
-      // convert the buffer to bytes and write them to file
+      // convert the buffer to a byte and write it to file
       while (buffer.size() >= 8) {
         std::string chunk = buffer.substr(0, 8);
 
