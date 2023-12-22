@@ -17,4 +17,4 @@ public:
   ~Node();
 };
 
-#endif // NODE_H
+#endif
