@@ -122,31 +122,25 @@ void compressData(std::string file) {
     throw std::runtime_error("Failed to open the file.");
   }
 
-  // Retrieve file name, extension, and extension size
   size_t dotPos = file.rfind('.');
   std::string extension = file.substr(dotPos + 1);
   std::string filename = file.substr(0, dotPos);
   int extensionSize = extension.size();
 
-  // Validate the file type is not hcmp
   if (extension == "hcmp") {
     throw std::runtime_error(
         "Invalid file type, hcmp is already compressed");
   }
 
-  // Get a map of characters and how often they occur in the file
   std::map<unsigned char, int> occurrences = getOccurrences(inputFile);
   std::cout << "Retrieved occurrences" << '\n';
 
-  // Reset file read position to the beginning
   inputFile.clear();
   inputFile.seekg(0, std::ios::beg);
 
-  // Get a vector of nodes containing the occurrences of each character
   std::vector<Node *> occurrenceNodes = getOccurrenceNodes(occurrences);
   std::cout << "Retrieved occurrence nodes" << '\n';
 
-  // Create Huffman tree out of nodes
   Node *huffmanHead = createHuffmanTree(occurrenceNodes);
   std::cout << "Created Huffman tree" << '\n';
 
@@ -170,26 +164,15 @@ void compressData(std::string file) {
     // Write the amount of digits used for padding to file
     int paddingNum = getPaddingAmount(occurrences, table);
     outputFile.write(reinterpret_cast<const char *>(&paddingNum), sizeof(paddingNum));
-
-    // Write extension size to file
     outputFile.write(reinterpret_cast<const char *>(&extensionSize), sizeof(extensionSize));
-
-    // Write extension to file
     outputFile.write((extension.c_str()), extensionSize);
-
-    // Write tree size to file
     outputFile.write(reinterpret_cast<const char *>(&treeSize), sizeof(treeSize));
-
-    // Write tree data to file
     outputFile.write(reinterpret_cast<const char *>(packedTree.data()), packedTree.size());
-
-    // Convert data and write to file
     std::string buffer;
     unsigned char byte;
 
     // While the file being compressed is not empty, read a single byte from the file
     while (inputFile.read(reinterpret_cast<char *>(&byte), sizeof(byte))) {
-      // Using the look-up table, convert the byte value into it's string binary code
       buffer += table[byte];
 
 
@@ -197,13 +180,8 @@ void compressData(std::string file) {
       // convert the buffer to a byte and write it to file
       while (buffer.size() >= 8) {
         std::string chunk = buffer.substr(0, 8);
-
-        // Remove the first 8 characters in the buffer
         buffer = buffer.substr(8);
-
-        // Stoi with base 2 is used to convert the string binary code into a byte
         unsigned char value = static_cast<unsigned char>(std::stoi(chunk, nullptr, 2));
-        // The byte is now written to file
         outputFile.write(reinterpret_cast<const char *>(&value), sizeof(value));
       }
     }
@@ -212,11 +190,7 @@ void compressData(std::string file) {
     if (!buffer.empty()) {
       // Since the remaining bits are less then 8, pad the with 0s
       buffer += std::string(paddingNum, '0');
-
-      // Convert the remaining bits to a byte
       unsigned char value = static_cast<unsigned char>(std::stoi(buffer, nullptr, 2));
-
-      // Write the last byte to file
       outputFile.write(reinterpret_cast<const char *>(&value), sizeof(value));
     }
 
