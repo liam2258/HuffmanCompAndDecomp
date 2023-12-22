@@ -1,10 +1,10 @@
-#include "BitUtils.h"  // Include the corresponding header file
+#include "BitUtils.h" // Include the corresponding header file
 
-// Given an integer the function returns it in byte form via a vector of unsigned
-// char
+// Given an integer the function returns it in byte form via a vector of
+// unsigned char
 std::vector<unsigned char> intToBytes(int num) {
   if (num < 0) {
-        throw std::invalid_argument("Number cannot be negative.");
+    throw std::invalid_argument("Number cannot be negative.");
   }
   std::vector<unsigned char> bytes(4);
   bytes[0] = static_cast<unsigned char>((num >> 24) & 0xFF);
@@ -21,7 +21,6 @@ int byteToInt(std::vector<unsigned char> bytes) {
   }
   int value = (static_cast<int>(bytes[0]) << 24) |
               (static_cast<int>(bytes[1]) << 16) |
-              (static_cast<int>(bytes[2]) << 8) |
-              static_cast<int>(bytes[3]);
+              (static_cast<int>(bytes[2]) << 8) | static_cast<int>(bytes[3]);
   return value;
 }

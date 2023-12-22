@@ -21,7 +21,8 @@ void preOrderPacking(Node *head, std::vector<unsigned char> &tree) {
   // Add the frequency vector to the tree vector
   tree.insert(tree.end(), frequency.begin(), frequency.end());
 
-  // Lasly based on if the node has left or right or no children add an identifier
+  // Lasly based on if the node has left or right or no children add an
+  // identifier
   if (head->left == nullptr && head->right == nullptr) {
     tree.push_back('A');
   } else if (head->left == nullptr) {
@@ -50,9 +51,11 @@ std::vector<unsigned char> getTreePacket(Node *head) {
   return tree;
 }
 
-// A helper function for treeReconstructor, based on the node and associated flag it links the nodes together.
-// The tracker variable keeps note of the index during each recursive call
-void linkNodes(Node *current, std::vector<Node *> &nodes, std::vector<unsigned char> &flags, int &tracker) {
+// A helper function for treeReconstructor, based on the node and associated
+// flag it links the nodes together. The tracker variable keeps note of the
+// index during each recursive call
+void linkNodes(Node *current, std::vector<Node *> &nodes,
+               std::vector<unsigned char> &flags, int &tracker) {
   switch (flags[tracker]) {
   case 'A': // In the case where a has no children
     return;
@@ -92,22 +95,28 @@ Node *treeReconstructor(std::vector<unsigned char> treePacket) {
   // Extract the nodes and the flags (Every bundle has 6 bytes where the 1st
   // byte is the node value, the 2-5th are the frequency, and the 6th is a flag)
   for (int i = 0; i <= treePacket.size() - 6; i += 6) {
-    // Grab bytes 2-5 which make up the frequency integer value and convert it to an integer
-    std::vector<unsigned char> frequencyBytes {treePacket[i + 1], treePacket[i + 2], treePacket[i + 3], treePacket[i + 4]};
+    // Grab bytes 2-5 which make up the frequency integer value and convert it
+    // to an integer
+    std::vector<unsigned char> frequencyBytes{
+        treePacket[i + 1], treePacket[i + 2], treePacket[i + 3],
+        treePacket[i + 4]};
     int frequency = byteToInt(frequencyBytes);
 
-    // Create a new node using the value the node is representing (treePacket[i]) and the frequency integer we just created
-    // Then add the node to the nodes vector
+    // Create a new node using the value the node is representing
+    // (treePacket[i]) and the frequency integer we just created Then add the
+    // node to the nodes vector
     nodes.push_back(new Node(treePacket[i], frequency));
 
-    // Retrieve the flag, which identifies how many children each node has, and add it to the flag vector
+    // Retrieve the flag, which identifies how many children each node has, and
+    // add it to the flag vector
     flags.push_back(treePacket[i + 5]);
   }
 
   // Tracker used to keep track of index during recursive function calling
   int tracker = 0;
 
-  // Use the created nodes and flags vector to link the nodes together into a tree
+  // Use the created nodes and flags vector to link the nodes together into a
+  // tree
   linkNodes(nodes[0], nodes, flags, tracker);
 
   return nodes[0];
@@ -141,13 +150,16 @@ void huffmanConstructor(std::vector<Node *> &nodes) {
   Node *minNode1 = nodes[minIndex1];
   Node *minNode2 = nodes[minIndex2];
 
-  // Create a new node that combines the two frequencies of the child nodes, assigning the smaller node as it's left child and the larger node as it's right child
+  // Create a new node that combines the two frequencies of the child nodes,
+  // assigning the smaller node as it's left child and the larger node as it's
+  // right child
   int newFreq = minNode1->frequency + minNode2->frequency;
   Node *newNode = new Node('Z', newFreq);
   newNode->left = minNode1;
   newNode->right = minNode2;
 
-  //Check which index location the min value is located, if minIndex1 is larger delete it first if not delete it second.
+  // Check which index location the min value is located, if minIndex1 is larger
+  // delete it first if not delete it second.
   // This is done to keep the indexes from changing after the first erasure
   if (minIndex1 > minIndex2) {
     nodes.erase(nodes.begin() + minIndex1);
@@ -162,7 +174,8 @@ void huffmanConstructor(std::vector<Node *> &nodes) {
   }
 }
 
-// Given a vector of Node pointers, the function organizes them into a huffman tree
+// Given a vector of Node pointers, the function organizes them into a huffman
+// tree
 Node *createHuffmanTree(std::vector<Node *> &nodes) {
   if (nodes.size() < 1) {
     throw std::invalid_argument("Empty vector");
@@ -191,11 +204,12 @@ Node *createHuffmanTree(std::vector<Node *> &nodes) {
   return head;
 }
 
-// A helper function for create table, it creates a map that keeps track of the binary path
-// for each value in the huffman tree. It does this by recursively traversing the tree in
-// preorder form while passsing a copy of the path string in every function call,
-// appending it with 0 if it traverses left, and 1 if it traverses right, then commiting
-// that path to the map when finding a node with no child nodes
+// A helper function for create table, it creates a map that keeps track of the
+// binary path for each value in the huffman tree. It does this by recursively
+// traversing the tree in preorder form while passsing a copy of the path string
+// in every function call, appending it with 0 if it traverses left, and 1 if it
+// traverses right, then commiting that path to the map when finding a node with
+// no child nodes
 void findTreePath(Node *head, std::string path,
                   std::map<unsigned char, std::string> &table) {
   if (head == nullptr) {
@@ -210,9 +224,10 @@ void findTreePath(Node *head, std::string path,
   findTreePath(head->right, path + '1', table);
 }
 
-// Given the head of a huffman tree the function returns a look up table as a map,
-// where the key is a node value and the hash value is the binary path to reach said node
-// in string form. This is accomplished by leverageing the helper function findTreePath
+// Given the head of a huffman tree the function returns a look up table as a
+// map, where the key is a node value and the hash value is the binary path to
+// reach said node in string form. This is accomplished by leverageing the
+// helper function findTreePath
 std::map<unsigned char, std::string> createTable(Node *huffmanHead) {
   std::map<unsigned char, std::string> table;
   findTreePath(huffmanHead, "", table);
