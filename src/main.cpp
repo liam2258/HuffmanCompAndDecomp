@@ -9,8 +9,15 @@ int main(int argc, char *argv[]) {
 
   std::string file = argv[1];
 
+  // Check if the file has an extension
+  size_t periodPos = file.rfind('.');
+  if (periodPos == std::string::npos) {
+    std::cout << "File requires an extension." << std::endl;
+    return 1;
+  }
+
   // Check the mode (compression or decompression) based on the file extension
-  std::string extension = file.substr(file.rfind('.') + 1);
+  std::string extension = file.substr(periodPos + 1);
   if (extension == "hcmp") {
     try {
       decompress_data(file);
