@@ -7,16 +7,15 @@
 #include <stdexcept>
 #include <vector>
 
-
-void preOrderPacking(Node *head, std::vector<unsigned char> &tree);
-std::vector<unsigned char> getTreePacket(Node *head);
-void linkNodes(Node *current, std::vector<Node *> &nodes,
-               std::vector<unsigned char> &flags, int &tracker);
-Node *treeReconstructor(std::vector<unsigned char> treePacket);
-void huffmanConstructor(std::vector<Node *> &nodes);
-Node *createHuffmanTree(std::vector<Node *> &nodes);
-void findTreePath(Node *head, std::string path,
-                  std::map<unsigned char, std::string> &table);
+void pre_order_packing(Node *head, std::vector<unsigned char> &tree);
+std::vector<unsigned char> get_tree_packet(Node *head);
+void link_nodes(Node *current, std::vector<Node *> &nodes,
+                std::vector<unsigned char> &flags, int &tracker);
+Node *tree_reconstructor(std::vector<unsigned char> treePacket);
+void huffman_constructor(std::vector<Node *> &nodes);
+Node *create_huffman_tree(std::vector<Node *> &nodes);
+void find_tree_path(Node *head, std::string path,
+                    std::map<unsigned char, std::string> &table);
 std::map<unsigned char, std::string> createTable(Node *huffmanHead);
 
 #endif

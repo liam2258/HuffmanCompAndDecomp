@@ -1,8 +1,18 @@
-#include "BitUtils.h" // Include the corresponding header file
+#include "BitUtils.h"
 
-// Given an integer the function returns it in byte form via a vector of
-// unsigned char
-std::vector<unsigned char> intToBytes(int num) {
+/**
+ * Converts an integer into a vector of bytes.
+ *
+ * This function takes an integer as input and converts it into a vector of
+ * bytes (unsigned char). The integer is broken down into 4 bytes, with each
+ * byte representing 8 bits of the integer. The bytes are ordered in big-endian
+ * format, meaning the most significant byte comes first. If the input integer
+ * is negative, an invalid_argument exception is thrown.
+ *
+ * @param num The integer to be converted into bytes.
+ * @return A vector of 4 bytes (unsigned char) representing the input integer.
+ */
+std::vector<unsigned char> int_to_bytes(int num) {
   if (num < 0) {
     throw std::invalid_argument("Number cannot be negative.");
   }
@@ -14,8 +24,18 @@ std::vector<unsigned char> intToBytes(int num) {
   return bytes;
 }
 
-// Given 4 bytes the function returns the value as an integer
-int byteToInt(std::vector<unsigned char> bytes) {
+/**
+ * Converts a vector of bytes into an integer.
+ *
+ * This function takes a vector of 4 bytes (unsigned char) as input and converts
+ * it into an integer. Each byte represents 8 bits of the integer. The function
+ * combines these bytes to form the integer. If the input vector does not
+ * contain exactly 4 bytes, an invalid_argument exception is thrown.
+ *
+ * @param bytes The vector of 4 bytes to be converted into an integer.
+ * @return The integer represented by the input bytes.
+ */
+int byte_to_int(std::vector<unsigned char> bytes) {
   if (bytes.size() != 4) {
     throw std::invalid_argument("Input vector must have a size of 4.");
   }

@@ -1,14 +1,25 @@
 #include "CompUtils.h"
 
-// This function reads the given file 1 byte at a time, converting that byte
-// into bits, and then those bits into a string of 1s and 0s. The function then
-// checks if we've reached the end of the file, removing the remainder from the
-// bit string if so, finally the bit string is used to traverse the huffman
-// tree. When it reaches a value (childless node) it writes the value to file,
-// when it runs out of bits it deletes the current bits in the bit string and
-// repeats the process with the next byte until no more remain
-void decompressHelper(std::ofstream &outputFile, std::ifstream &inputFile,
-                      Node *head, int remainder) {
+/**
+ * This function decompresses a file that was compressed using Huffman coding.
+ *
+ * It reads the input file one byte at a time, converting each byte into a
+ * string of 1s and 0s (bits). It then uses this bit string to traverse the
+ * Huffman tree. When it reaches a leaf node (a node with no children), it
+ * writes the value of that node to the output file.
+ *
+ * If it reaches the end of the file, it removes the remainder bits from the bit
+ * string. The process is repeated until there are no more bytes left in the
+ * input file.
+ *
+ * @param outputFile The file where the decompressed data will be written.
+ * @param inputFile The compressed file to be decompressed.
+ * @param head The root of the Huffman tree used for decompression.
+ * @param remainder The number of remainder bits in the last byte of the input
+ * file.
+ */
+void decompress_helper(std::ofstream &outputFile, std::ifstream &inputFile,
+                       Node *head, int remainder) {
   Node *current = head;
   unsigned char byte;
   std::string bits;
@@ -47,24 +58,45 @@ void decompressHelper(std::ofstream &outputFile, std::ifstream &inputFile,
   }
 }
 
-// Given the head of a huffman tree, an output file to write to, a input file to
-// read from, and a remainder for how many bits to discard at the end of the
-// file, this function decompresses the file back to it's original state prior
-// to compression. This is done by utilizing the decompressHelper  function
+/**
+ * Decompresses a file that was compressed using Huffman coding.
+ *
+ * This function is a wrapper for the decompress_helper function. It first
+ * checks if the head of the Huffman tree is null. If it is, it throws an
+ * invalid_argument exception. Otherwise, it calls the decompress_helper
+ * function to decompress the file.
+ *
+ * @param head The root of the Huffman tree used for decompression.
+ * @param outputFile The file where the decompressed data will be written.
+ * @param inputFile The compressed file to be decompressed.
+ * @param remainder The number of remainder bits in the last byte of the input
+ * file.
+ */
 void decompress(Node *head, std::ofstream &outputFile, std::ifstream &inputFile,
                 int remainder) {
   if (head == nullptr) {
     throw std::invalid_argument("Invalid Huffman tree, head received is null.");
   }
 
-  decompressHelper(outputFile, inputFile, head, remainder);
+  decompress_helper(outputFile, inputFile, head, remainder);
 }
 
-// This function is used for the decompression feature of the program, opening
-// and reading a provided file, retrieiving the stored packet information, and
-// then decompressing the data itself, the exact steps are detailed in the
-// function
-void decompressData(std::string file) {
+/**
+ * Decompresses a Huffman-compressed file.
+ *
+ * This function opens the input file in binary mode and checks if it was opened
+ * successfully. If not, it throws a runtime_error exception.
+ *
+ * It then retrieves the name and extension of the input file. If the extension
+ * is not "hcmp" (indicating a Huffman-compressed file), it throws a
+ * runtime_error exception.
+ *
+ * After validating the file, it calls the decompress function to decompress the
+ * data.
+ *
+ * @param file The path to the Huffman-compressed file to be decompressed.
+ */
+void decompress_data(std::string file) {
   std::ifstream inputFile(file, std::ios::binary);
   if (!inputFile) {
     throw std::runtime_error("Failed to open the file.");
@@ -74,17 +106,14 @@ void decompressData(std::string file) {
   std::string filename = file.substr(0, dotPos);
   std::string givenExtension = file.substr(dotPos + 1);
 
-  // Validate the file type is hcmp
   if (givenExtension != "hcmp") {
     throw std::runtime_error(
         "Invalid file type, please select an hcmp file for decompressing");
   }
 
-  // Get the remainder
   int remainder;
   inputFile.read(reinterpret_cast<char *>(&remainder), sizeof(remainder));
 
-  // Get the extension size
   int extensionSize;
   inputFile.read(reinterpret_cast<char *>(&extensionSize),
                  sizeof(extensionSize));
@@ -94,38 +123,43 @@ void decompressData(std::string file) {
   inputFile.read(reinterpret_cast<char *>(extensionData.data()), extensionSize);
   std::string extension(extensionData.begin(), extensionData.end());
 
-  // Get the huffman tree size
   int treeSize;
   inputFile.read(reinterpret_cast<char *>(&treeSize), sizeof(treeSize));
 
-  // Get the huffman tree data (in a vector of unsigned char)
   std::vector<unsigned char> treeData(treeSize);
   inputFile.read(reinterpret_cast<char *>(treeData.data()), treeSize);
 
-  // Rebuild the huffman tree using the tree data
-  Node *huffmanHead = treeReconstructor(treeData);
+  Node *huffmanHead = tree_reconstructor(treeData);
 
-  // Create the output file for writing
   std::ofstream outputFile(filename + "(unzp)." + extension, std::ios::binary);
   if (!outputFile) {
     throw std::runtime_error("Failed to open the output file.");
   }
 
-  // Uncompress remaining data using the huffman tree
   decompress(huffmanHead, outputFile, inputFile, remainder);
 
-  // Delete head node, this will activate the destructor and free all child
-  // nodes
   delete huffmanHead;
 
   std::cout << "Data successfully decompressed." << std::endl;
 }
 
-// This function is used for the compression feature of the program, it opens
-// and reads the given file twice, once to create the huffman tree for it's
-// encoding, and again to actually compress the data into the new file, the
-// exact steps are detailed in the function itself
-void compressData(std::string file) {
+/**
+ * Compresses a file using Huffman coding.
+ *
+ * This function opens the input file in binary mode and checks if it was opened
+ * successfully. If not, it throws a runtime_error exception.
+ *
+ * It then retrieves the name and extension of the input file. If the extension
+ * is "hcmp" (indicating a Huffman-compressed file), it throws a runtime_error
+ * exception.
+ *
+ * After validating the file, it calculates the frequency of each byte in the
+ * file and uses this information to build a Huffman tree. It then uses this
+ * tree to compress the data in the file.
+ *
+ * @param file The path to the file to be compressed.
+ */
+void compress_data(std::string file) {
   std::ifstream inputFile(file, std::ios::binary);
   if (!inputFile) {
     throw std::runtime_error("Failed to open the file.");
@@ -140,20 +174,20 @@ void compressData(std::string file) {
     throw std::runtime_error("Invalid file type, hcmp is already compressed");
   }
 
-  std::map<unsigned char, int> occurrences = getOccurrences(inputFile);
+  std::map<unsigned char, int> occurrences = get_occurrences(inputFile);
   std::cout << "Retrieved occurrences" << '\n';
 
   inputFile.clear();
   inputFile.seekg(0, std::ios::beg);
 
-  std::vector<Node *> occurrenceNodes = getOccurrenceNodes(occurrences);
+  std::vector<Node *> occurrenceNodes = get_occurrence_nodes(occurrences);
   std::cout << "Retrieved occurrence nodes" << '\n';
 
-  Node *huffmanHead = createHuffmanTree(occurrenceNodes);
+  Node *huffmanHead = create_huffman_tree(occurrenceNodes);
   std::cout << "Created Huffman tree" << '\n';
 
   // Pack the tree into a vector in preorder form to store in file
-  std::vector<unsigned char> packedTree = getTreePacket(huffmanHead);
+  std::vector<unsigned char> packedTree = get_tree_packet(huffmanHead);
 
   // Get the size of the tree to also store in file
   int treeSize = packedTree.size();
@@ -167,11 +201,9 @@ void compressData(std::string file) {
   delete huffmanHead;
   std::cout << "Deleted Huffman head" << '\n';
 
-  // Write the data to file
   std::ofstream outputFile(filename + ".hcmp", std::ios::binary);
   if (outputFile) {
-    // Write the amount of digits used for padding to file
-    int paddingNum = getPaddingAmount(occurrences, table);
+    int paddingNum = get_padding_amount(occurrences, table);
     outputFile.write(reinterpret_cast<const char *>(&paddingNum),
                      sizeof(paddingNum));
     outputFile.write(reinterpret_cast<const char *>(&extensionSize),

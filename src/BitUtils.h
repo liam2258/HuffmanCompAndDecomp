@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-std::vector<unsigned char> intToBytes(int num);
-int byteToInt(std::vector<unsigned char> bytes);
+std::vector<unsigned char> int_to_bytes(int num);
+int byte_to_int(std::vector<unsigned char> bytes);
 
 #endif

@@ -7,11 +7,11 @@
 
 // Testing functions in BitUtils.h
 TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
-    SECTION("intToBytes() Tests:") {
+    SECTION("int_to_bytes() Tests:") {
 
         //Testing random integers
         int num1 = 256;
-        std::vector<unsigned char> bytes1 = intToBytes(num1);
+        std::vector<unsigned char> bytes1 = int_to_bytes(num1);
 
         REQUIRE(bytes1.size() == 4);
         REQUIRE(bytes1[0] == 0x00);
@@ -20,7 +20,7 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
         REQUIRE(bytes1[3] == 0x00);
 
         int num2 = 8172;
-        std::vector<unsigned char> bytes2 = intToBytes(num2);
+        std::vector<unsigned char> bytes2 = int_to_bytes(num2);
 
         REQUIRE(bytes2.size() == 4);
         REQUIRE(bytes2[0] == 0x00);
@@ -30,7 +30,7 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
         
         // Testing minimum sized integer 0
         int num3 = 0;
-        std::vector<unsigned char> bytes3 = intToBytes(num3);
+        std::vector<unsigned char> bytes3 = int_to_bytes(num3);
 
         REQUIRE(bytes3.size() == 4);
         REQUIRE(bytes3[0] == 0x00);
@@ -40,7 +40,7 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
 
         // Testing maximum sized integer
         int num4 = 2147483647;
-        std::vector<unsigned char> bytes4 = intToBytes(num4);
+        std::vector<unsigned char> bytes4 = int_to_bytes(num4);
 
         REQUIRE(bytes4.size() == 4);
         REQUIRE(bytes4[0] == 0x7F);
@@ -50,32 +50,32 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
 
         // Testing negative integer, should throw invalid argument exception
         int num5 = -1;
-        REQUIRE_THROWS_AS(intToBytes(num5), std::invalid_argument);
+        REQUIRE_THROWS_AS(int_to_bytes(num5), std::invalid_argument);
     }
 
 
 
 
 
-    SECTION("byteToInt() Tests:") {
+    SECTION("byte_to_int() Tests:") {
         // Testing random byte vectors
         std::vector<unsigned char> bytes1 {0x00, 0x00, 0x01, 0x00};
-        REQUIRE(byteToInt(bytes1) == 256);
+        REQUIRE(byte_to_int(bytes1) == 256);
 
         std::vector<unsigned char> bytes2 = {0x00, 0x00, 0x1F, 0xEC};
-        REQUIRE(byteToInt(bytes2) == 8172);
+        REQUIRE(byte_to_int(bytes2) == 8172);
 
         // Testing for maximum sized integer
         std::vector<unsigned char> bytes3 = {0x7F, 0xFF, 0xFF, 0xFF};
-        REQUIRE(byteToInt(bytes3) == 2147483647);
+        REQUIRE(byte_to_int(bytes3) == 2147483647);
 
         // Testing integer of size 0
         std::vector<unsigned char> bytes4 = {0x00, 0x00, 0x00, 0x00};
-        REQUIRE(byteToInt(bytes4) == 0);
+        REQUIRE(byte_to_int(bytes4) == 0);
 
         // Testing with invalid vector size, should throw invalid argument exception
         std::vector<unsigned char> bytes5 = {0x00};
-        REQUIRE_THROWS_AS(byteToInt(bytes5), std::invalid_argument);
+        REQUIRE_THROWS_AS(byte_to_int(bytes5), std::invalid_argument);
     }
 }
 
@@ -84,27 +84,27 @@ TEST_CASE("Bit Manipulation: Testing BitUtils.h Functions") {
 
 // Helper function for getNodeList, this part of the code traverses the
 // tree in post order form, adding each node to the list as it goes
-void nodeListHelper(Node *given, std::vector<unsigned char> &list) {
+void node_values_helper(Node *given, std::vector<unsigned char> &list) {
     if (given) {
         list.push_back(given->value);
     } else {
         return;
     }
-    nodeListHelper(given->left, list);
-    nodeListHelper(given->right, list);
+    node_values_helper(given->left, list);
+    node_values_helper(given->right, list);
 }
 
 // Function to traverse a tree of nodes, gets every node value in post order form
 // and returns them as a vector
-std::vector<unsigned char> getNodeList(Node *given) {
+std::vector<unsigned char> get_node_list(Node *given) {
     std::vector<unsigned char> list;
-    nodeListHelper(given, list);
+    node_values_helper(given, list);
     return list;
 }
 
 // Helper function for getHuffmanValues, this part of the code traverses the
 // tree in post order form, adding each node with no children to the list as it goes
-void huffmanValuesHelper(Node *given, std::vector<unsigned char> &values) {
+void huffman_values_helper(Node *given, std::vector<unsigned char> &values) {
     if (given) {
         if (!given->left && !given->right) {
             values.push_back(given->value);
@@ -112,48 +112,48 @@ void huffmanValuesHelper(Node *given, std::vector<unsigned char> &values) {
     } else {
         return;
     }
-    huffmanValuesHelper(given->left, values);
-    huffmanValuesHelper(given->right, values);
+    huffman_values_helper(given->left, values);
+    huffman_values_helper(given->right, values);
 }
 
 // A function to help test the validity of huffman trees, function returns a vector of all the values in the huffman tree
 // In post order form
-std::vector<unsigned char> getHuffmanValues(Node *given) {
+std::vector<unsigned char> get_huffman_values(Node *given) {
     std::vector<unsigned char> values;
-    huffmanValuesHelper(given, values);
+    huffman_values_helper(given, values);
     return values;
 }
 
 
 // Helper function for getHuffmanFrequencies, this part of the code actually traverse the
 // tree in post order form, adding each node to the list as it goes
-void huffmanFrequenciesHelper(Node *given, std::vector<int> &frequencies) {
+void huffman_frequencies_helper(Node *given, std::vector<int> &frequencies) {
     if (given) {
         frequencies.push_back(given->frequency);
     } else {
         return;
     }
-    huffmanFrequenciesHelper(given->left, frequencies);
-    huffmanFrequenciesHelper(given->right, frequencies);
+    huffman_frequencies_helper(given->left, frequencies);
+    huffman_frequencies_helper(given->right, frequencies);
 }
 
 // A function to help test the validity of huffman trees, function returns a vector of all the frequencies in the huffman tree
 // In post order form
-std::vector<int> getHuffmanFrequencies(Node *given) {
+std::vector<int> get_huffman_frequencies(Node *given) {
     std::vector<int> frequencies;
-    huffmanFrequenciesHelper(given, frequencies);
+    huffman_frequencies_helper(given, frequencies);
     return frequencies;
 }
 
 
 // Testing functions in TreeUtils.h
 TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
-    SECTION("getTreePacket() Tests:") {
+    SECTION("get_tree_packet() Tests:") {
 
         // Testing when given tree is empty
 
         Node* root = nullptr;
-        REQUIRE_THROWS_AS(getTreePacket(root), std::invalid_argument);
+        REQUIRE_THROWS_AS(get_tree_packet(root), std::invalid_argument);
 
 
 
@@ -167,7 +167,7 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
             'A', 0x00, 0x00, 0x00, 0x02, 'A',
         };
 
-        REQUIRE(getTreePacket(singleNode) == expectedPacket);
+        REQUIRE(get_tree_packet(singleNode) == expectedPacket);
 
         delete singleNode;
 
@@ -196,7 +196,7 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
             'E', 0x00, 0x00, 0x00, 0x06, 'A',
         };
 
-        REQUIRE(getTreePacket(testNode1) == expectedPacket2);
+        REQUIRE(get_tree_packet(testNode1) == expectedPacket2);
 
         delete testNode1;
 
@@ -230,7 +230,7 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
             'G', 0x00, 0x00, 0x00, 0x08, 'A',
         };
 
-        REQUIRE(getTreePacket(test2Node1) == expectedPacket3);
+        REQUIRE(get_tree_packet(test2Node1) == expectedPacket3);
 
         delete test2Node1;
     }
@@ -239,13 +239,13 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
 
 
 
-    SECTION("treeReconstructor() Tests:") {
+    SECTION("tree_reconstructor() Tests:") {
 
         // Constructing an empty packet
         std::vector<unsigned char> nodePacket = {};
 
         // Testing empty packet
-        REQUIRE_THROWS_AS(treeReconstructor(nodePacket), std::invalid_argument);
+        REQUIRE_THROWS_AS(tree_reconstructor(nodePacket), std::invalid_argument);
 
 
 
@@ -253,7 +253,7 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         std::vector<unsigned char> nodePacket2 = {'A'};
 
         // Testing invalidly sized packet
-        REQUIRE_THROWS_AS(treeReconstructor(nodePacket2), std::invalid_argument);
+        REQUIRE_THROWS_AS(tree_reconstructor(nodePacket2), std::invalid_argument);
 
 
 
@@ -263,11 +263,11 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         };
 
         // Getting the function response
-        Node* response3 = treeReconstructor(nodePacket3);
+        Node* response3 = tree_reconstructor(nodePacket3);
 
         // Testing random valid packet
         // Test expected tree size, should be 1
-        std::vector<unsigned char> tree3 = getNodeList(response3);
+        std::vector<unsigned char> tree3 = get_node_list(response3);
         REQUIRE(tree3.size() == 1);
         // Testing tree for correct content
         REQUIRE(tree3 == std::vector<unsigned char> {'A'});
@@ -286,11 +286,11 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         };
 
         // Getting the function response
-        Node* response4 = treeReconstructor(nodePacket4);
+        Node* response4 = tree_reconstructor(nodePacket4);
 
         // Testing random valid packet
         // Test expected tree size, should be 5
-        std::vector<unsigned char> tree4 = getNodeList(response4);
+        std::vector<unsigned char> tree4 = get_node_list(response4);
         REQUIRE(tree4.size() == 5);
         // Testing tree2 for correct content
         REQUIRE(tree4 == std::vector<unsigned char> {'A', 'B', 'C', 'D', 'E'});
@@ -311,11 +311,11 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         };
 
         // Getting the function response
-        Node* response5 = treeReconstructor(nodePacket5);
+        Node* response5 = tree_reconstructor(nodePacket5);
 
         // Testing random valid packet
         // Test expected tree size, should be 5
-        std::vector<unsigned char> tree5 = getNodeList(response5);
+        std::vector<unsigned char> tree5 = get_node_list(response5);
         REQUIRE(tree5.size() == 7);
         // Testing tree2 for correct content
         REQUIRE(tree5 == std::vector<unsigned char> {'A', 'B', 'D', 'E', 'C', 'F', 'G'});
@@ -325,21 +325,21 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
 
 
 
-    SECTION("createHuffmanTree() Tests:") {
+    SECTION("create_huffman_tree() Tests:") {
         // Create an empty vector for testing
         std::vector<Node *> nodeVector1;
 
         // Test empty vector, should return error
-        REQUIRE_THROWS_AS(createHuffmanTree(nodeVector1), std::invalid_argument);
+        REQUIRE_THROWS_AS(create_huffman_tree(nodeVector1), std::invalid_argument);
 
         // Create a small valid vector for testing
         std::vector<Node *> nodeVector2 {new Node('A', 12)};
 
-        Node *huffmanTree2 = createHuffmanTree(nodeVector2);
+        Node *huffmanTree2 = create_huffman_tree(nodeVector2);
 
         
-        REQUIRE(getHuffmanValues(huffmanTree2) == std::vector<unsigned char> {'A'});
-        REQUIRE(getHuffmanFrequencies(huffmanTree2) == std::vector<int> {0, 12});
+        REQUIRE(get_huffman_values(huffmanTree2) == std::vector<unsigned char> {'A'});
+        REQUIRE(get_huffman_frequencies(huffmanTree2) == std::vector<int> {0, 12});
 
         delete huffmanTree2;
 
@@ -348,10 +348,10 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         // Create a second random valid vector for testing
         std::vector<Node *> nodeVector3 {new Node('A', 12), new Node('B', 3), new Node('C', 22), new Node('D', 10)};
 
-        Node *huffmanTree3 = createHuffmanTree(nodeVector3);
+        Node *huffmanTree3 = create_huffman_tree(nodeVector3);
 
-        REQUIRE(getHuffmanValues(huffmanTree3) == std::vector<unsigned char> {'C', 'A', 'B', 'D'});
-        REQUIRE(getHuffmanFrequencies(huffmanTree3) == std::vector<int> {47, 22, 25, 12, 13, 3, 10});
+        REQUIRE(get_huffman_values(huffmanTree3) == std::vector<unsigned char> {'C', 'A', 'B', 'D'});
+        REQUIRE(get_huffman_frequencies(huffmanTree3) == std::vector<int> {47, 22, 25, 12, 13, 3, 10});
 
         delete huffmanTree3;
 
@@ -361,10 +361,10 @@ TEST_CASE("Tree Manipulation: Testing TreeUtils.h Functions") {
         std::vector<Node *> nodeVector4 {new Node('A', 12), new Node('B', 5), new Node('C', 22), new Node('D', 10),
                                         new Node('E', 15), new Node('F', 30), new Node('G', 29)};
 
-        Node *huffmanTree4 = createHuffmanTree(nodeVector4);
+        Node *huffmanTree4 = create_huffman_tree(nodeVector4);
 
-        REQUIRE(getHuffmanValues(huffmanTree4) == std::vector<unsigned char> {'A', 'E', 'G', 'F', 'B', 'D', 'C'});
-        REQUIRE(getHuffmanFrequencies(huffmanTree4) == std::vector<int> {123, 56, 27, 12, 15, 29, 67, 30, 37, 15, 5, 10, 22});
+        REQUIRE(get_huffman_values(huffmanTree4) == std::vector<unsigned char> {'A', 'E', 'G', 'F', 'B', 'D', 'C'});
+        REQUIRE(get_huffman_frequencies(huffmanTree4) == std::vector<int> {123, 56, 27, 12, 15, 29, 67, 30, 37, 15, 5, 10, 22});
 
         delete huffmanTree4;
     }

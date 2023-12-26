@@ -1,11 +1,18 @@
 #include "MapUtils.h"
 
-// Given a map where the key is a byte value (unsigned char) and the hash value
-// is how often the value occurs, this function turns the map into a vector of
-// nodes This is done by iterating over the map and creating a new node with the
-// values for each entry
+/**
+ * Converts a map of byte occurrences into a vector of nodes.
+ *
+ * This function takes a map where the key is a byte value (unsigned char) and
+ * the value is the frequency of that byte. It creates a new node for each entry
+ * in the map, where the node's value is the byte and the node's frequency is
+ * the frequency of the byte. These nodes are then added to a vector.
+ *
+ * @param occurrences The map of byte occurrences to be converted into nodes.
+ * @return A vector of nodes representing the byte occurrences.
+ */
 std::vector<Node *>
-getOccurrenceNodes(std::map<unsigned char, int> &occurrences) {
+get_occurrence_nodes(std::map<unsigned char, int> &occurrences) {
   std::vector<Node *> nodes;
 
   for (auto &touple : occurrences) {
@@ -15,11 +22,19 @@ getOccurrenceNodes(std::map<unsigned char, int> &occurrences) {
   return nodes;
 }
 
-// Given a file, the function creates a map where the key is a character in the
-// file and the hash value is the number of times it occurs. This is done by
-// iterating over the file, converting each char to an unsigned char, and then
-// incrementing it in the occurences map
-std::map<unsigned char, int> getOccurrences(std::ifstream &inputFile) {
+/**
+ * Creates a map of byte occurrences in a file.
+ *
+ * This function reads the input file one byte at a time, converting each byte
+ * to an unsigned char. It then increments the count of that byte in the
+ * occurrences map. The function continues this process until it has read the
+ * entire file.
+ *
+ * @param inputFile The file to be read.
+ * @return A map where the key is a byte and the value is the frequency of that
+ * byte in the file.
+ */
+std::map<unsigned char, int> get_occurrences(std::ifstream &inputFile) {
   std::map<unsigned char, int> occurrences;
   unsigned char byte;
 
@@ -30,12 +45,21 @@ std::map<unsigned char, int> getOccurrences(std::ifstream &inputFile) {
   return occurrences;
 }
 
-// Function uses the occurences map and look-up table to find the exact length
-// in bits the compressed data will be, it then mods it by 8 and subtracts that
-// result from 8 to find the amount of bits that need to be padded on the final
-// byte
-int getPaddingAmount(std::map<unsigned char, int> intMap,
-                     std::map<unsigned char, std::string> stringMap) {
+/**
+ * Calculates the amount of padding needed for the final byte of the compressed
+ * data.
+ *
+ * This function uses the occurrences map and the look-up table to find the
+ * exact length in bits the compressed data will be. It then mods this length by
+ * 8 and subtracts the result from 8 to find the amount of bits that need to be
+ * padded on the final byte.
+ *
+ * @param intMap The map of byte occurrences.
+ * @param stringMap The look-up table mapping bytes to their Huffman codes.
+ * @return The number of bits that need to be padded on the final byte.
+ */
+int get_padding_amount(std::map<unsigned char, int> intMap,
+                       std::map<unsigned char, std::string> stringMap) {
   int sum = 0;
 
   // Iterators that will traverse the maps

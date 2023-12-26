@@ -13,13 +13,13 @@ int main(int argc, char *argv[]) {
   std::string extension = file.substr(file.rfind('.') + 1);
   if (extension == "hcmp") {
     try {
-      decompressData(file);
+      decompress_data(file);
     } catch (const std::exception &e) {
       std::cout << "Decompression failed: " << e.what() << std::endl;
     }
   } else {
     try {
-      compressData(file);
+      compress_data(file);
     } catch (const std::exception &e) {
       std::cout << "Compression failed: " << e.what() << std::endl;
     }

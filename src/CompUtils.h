@@ -7,11 +7,11 @@
 #include <cstring>
 
 
-void decompressHelper(std::ofstream &outputFile, std::ifstream &inputFile,
+void decompress_helper(std::ofstream &outputFile, std::ifstream &inputFile,
                       Node *head, int remainder);
 void decompress(Node *head, std::ofstream &outputFile, std::ifstream &inputFile,
                 int remainder);
-void decompressData(std::string file);
-void compressData(std::string file);
+void decompress_data(std::string file);
+void compress_data(std::string file);
 
 #endif

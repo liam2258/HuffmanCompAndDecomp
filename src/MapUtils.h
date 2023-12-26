@@ -8,9 +8,9 @@
 #include <vector>
 
 std::vector<Node *>
-getOccurrenceNodes(std::map<unsigned char, int> &occurrences);
-std::map<unsigned char, int> getOccurrences(std::ifstream &inputFile);
-int getPaddingAmount(std::map<unsigned char, int> intMap,
-                     std::map<unsigned char, std::string> stringMap);
+get_occurrence_nodes(std::map<unsigned char, int> &occurrences);
+std::map<unsigned char, int> get_occurrences(std::ifstream &inputFile);
+int get_padding_amount(std::map<unsigned char, int> intMap,
+                       std::map<unsigned char, std::string> stringMap);
 
 #endif
