@@ -1,0 +1,17 @@
+name: 'Test on Push and Pull Request'
+description: 'A GitHub Action to test on push to the main branch and on pull requests targeting main.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up C++ environment
+      uses: liam2258/HuffmanCompAndDecomp@main
+      with:
+        compiler: gcc
+
+    - name: Build and run tests
+      run: |
+        make test
