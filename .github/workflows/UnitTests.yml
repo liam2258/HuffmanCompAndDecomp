@@ -16,10 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up C++ environment
-        uses: liam2258/HuffmanCompAndDecomp/@main
-        with:
-          compiler: gcc
+      - name: Install C++ compiler
+        run: |
+          sudo apt update
+          sudo apt install -y g++
 
       - name: Build and run tests
         run: |
