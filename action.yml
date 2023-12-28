@@ -11,8 +11,8 @@ runs:
       uses: liam2258/HuffmanCompAndDecomp@main
       with:
         compiler: gcc
-      shell: bash
 
     - name: Build and run tests
+      shell: bash
       run: |
         make test
