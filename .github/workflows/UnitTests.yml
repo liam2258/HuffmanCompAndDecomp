@@ -13,13 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: liam2258/HuffmanCompAndDecomp/@main
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up C++ environment
-      uses: liam2258/HuffmanCompAndDecomp/@main
-      with:
-        compiler: gcc
+      - name: Set up C++ environment
+        uses: liam2258/HuffmanCompAndDecomp/@main
+        with:
+          compiler: gcc
 
-    - name: Build and run tests
-      run: |
-        make test
+      - name: Build and run tests
+        run: |
+          make test
