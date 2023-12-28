@@ -1,0 +1,25 @@
+name: Test on Push and Pull Request
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up C++ environment
+      uses: actions/setup-cpp@v2
+      with:
+        compiler: gcc
+
+    - name: Build and run tests
+      run: |
+        make test
