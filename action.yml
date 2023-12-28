@@ -3,6 +3,7 @@ description: 'A GitHub Action to test on push to the main branch and on pull req
 
 runs:
   using: 'composite'
+  shell: bash
   steps:
     - name: Checkout code
       uses: actions/checkout@v2
