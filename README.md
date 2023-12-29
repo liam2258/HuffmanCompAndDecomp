@@ -18,12 +18,6 @@ This project includes a Makefile and can be compiled with the following command 
   make
 ```
 
-Alternatively it can be compiled manually with the following bash comand from the src directory:
-
-```bash
-  g++ *.cpp -o main
-```
-
 Once compiled, the executable will take a filename as an argument in the command line. It will automtically detect if it is to perform compression or decompression based on the filename, hcmp files will be decompressed and all other files will be compressed. It can be executed using the example below:
 
 ```bash
@@ -34,27 +28,22 @@ This will produce a compressed hcmp version of the file in the same directory as
 
 ## Running Tests
 
-This program utilizes Catch2 for unit testing and the header is included in the repository. To run the tests you must first compile the tests and the files it will be testing using the following command in the UnitTesting directory:
+This program utilizes Catch2 for unit testing and the header is included in the repository. Running the tests can be done similarly to compliation using a make command:
 
 ```bash
-  g++ tests.cpp $(ls ../../src/*.cpp | grep -v main.cpp) -o test
+  make test
 ```
 
-After compilation the tests can be run using the executable:
+The tests will run automatically but for more detail you can re-run the exectuable using:
 
 ```bash
-  ./test
+  ./test_main -s
 ```
 
-They can also be made more detailed with the -s flag
+Additionally this program also utilizes Pytest for end-to-end testing. This includes testing the compilation of the program and testing its compression and decompression features on two files. From the src directory they can be run with the following commands:
 
 ```bash
-  ./test -s
-```
-
-Additionally this program also utilizes Pytest for end-to-end testing. This includes testing the compilation of the program and testing its compression and decompression features on two files. From the E2ETests directory you can use the following command:
-
-```bash
+  cd Testing/E2ETests
   pytest tests.py
 ```
 
@@ -64,7 +53,7 @@ These tests can similarly be expanded for more detail:
   pytest tests.py -v
 ```
 
-The compilation test is currently configured to use the GNU C++ compiler but this can be skipped. Please note that a compiled executable named "main" must be in the directory for other tests to pass:
+If you want to skip the compilation of the program you can use the following flag:
 
 ```bash
   pytest tests.py -k "not test_compilation"
