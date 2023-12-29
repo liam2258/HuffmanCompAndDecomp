@@ -40,7 +40,7 @@ The tests will run automatically but for more detail you can re-run the exectuab
   ./test_main -s
 ```
 
-Additionally this program also utilizes Pytest for end-to-end testing. This includes testing the compilation of the program and testing its compression and decompression features on two files. From the src directory they can be run with the following commands:
+Additionally this program also utilizes Pytest for end-to-end testing. This includes testing the compilation of the program and testing its compression and decompression features on two files. From the root directory they can be run with the following commands:
 
 ```bash
   cd Testing/E2ETests
