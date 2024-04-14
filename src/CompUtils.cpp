@@ -23,7 +23,7 @@ void decompress_helper(std::ofstream &outputFile, std::ifstream &inputFile,
   Node *current = head;
   unsigned char byte;
   std::string bits;
-  int byteSize = 8;
+  std::string::size_type byteSize = 8; // Change to std::string::size_type
 
   while (inputFile.read(reinterpret_cast<char *>(&byte), sizeof(byte))) {
     bits += std::bitset<8>(byte)
@@ -57,6 +57,7 @@ void decompress_helper(std::ofstream &outputFile, std::ifstream &inputFile,
     }
   }
 }
+
 
 /**
  * Decompresses a file that was compressed using Huffman coding.

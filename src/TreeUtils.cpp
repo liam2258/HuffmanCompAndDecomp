@@ -133,13 +133,13 @@ Node *tree_reconstructor(std::vector<unsigned char> treePacket) {
   std::vector<unsigned char> flags;
 
   // Check if the packet has a valid size
-  if (!treePacket.size() || treePacket.size() % 6) {
+  if (treePacket.size() < 6 || treePacket.size() % 6 != 0) {
     throw std::invalid_argument("Invalid packet size");
   }
 
   // Extract the nodes and the flags (Every bundle has 6 bytes where the 1st
   // byte is the node value, the 2-5th are the frequency, and the 6th is a flag)
-  for (int i = 0; i <= treePacket.size() - 6; i += 6) {
+  for (std::vector<unsigned char>::size_type i = 0; i <= treePacket.size() - 6; i += 6) {
     // Grab bytes 2-5 which make up the frequency integer value and convert it
     // to an integer
     std::vector<unsigned char> frequencyBytes{
@@ -167,6 +167,7 @@ Node *tree_reconstructor(std::vector<unsigned char> treePacket) {
   return nodes[0];
 }
 
+
 /**
  * Constructs a Huffman tree from a vector of nodes.
  *
@@ -181,11 +182,11 @@ Node *tree_reconstructor(std::vector<unsigned char> treePacket) {
 void huffman_constructor(std::vector<Node *> &nodes) {
   int lowestFreq1 = MAX_INT;
   int lowestFreq2 = MAX_INT;
-  int minIndex1 = -1;
-  int minIndex2 = -1;
+  std::vector<Node*>::size_type minIndex1 = -1; // Change type to size_type
+  std::vector<Node*>::size_type minIndex2 = -1; // Change type to size_type
 
   // Get the 2 lowest frequency nodes
-  for (int i = 0; i < nodes.size(); ++i) {
+  for (std::vector<Node*>::size_type i = 0; i < nodes.size(); ++i) { // Change type to size_type
     if (nodes[i]->frequency < lowestFreq1) {
       lowestFreq2 = lowestFreq1;
       minIndex2 = minIndex1;
