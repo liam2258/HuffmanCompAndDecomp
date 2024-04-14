@@ -1,6 +1,6 @@
 # C++ Huffman Compressor and Decompressor
 
-A file compressor and decompressor written in C++ that utilizes Huffman coding. The program takes a file and outputs a compressed version of it as a .hcmp file (Short for Huffman compression!). These hcmp files can then be decompressed into their original state.
+A file compressor and decompressor for Linux, written in C++ that utilizes Huffman coding. The program takes a file and outputs a compressed version of it as a .hcmp file (Short for Huffman compression!). These hcmp files can then be decompressed into their original state.
 
 ## Table of Contents
 
@@ -78,9 +78,13 @@ Packets that head each hcmp file are constructed in this format:
 | Huffman Tree      | Varying size |
 
 Remainder: How many useless bits are added to the end of the file to make a complete byte
+
 Extension Size: How many characters the original files extension is
+
 Extension: The file extension characters
+
 Huffman Tree Size: How many bytes the Huffman tree occupies
+
 Huffman Tree: The Huffman Tree Data
 
 ## Compression Examples
